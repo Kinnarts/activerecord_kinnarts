@@ -2,8 +2,13 @@ require "csv"
 
 module ActiverecordKinnarts
   class Base
-    def self.new
-      puts 'new'
+    @@id = 0
+
+    def initialize(params)
+      headers = CSV.open("#{self.class.name}.csv", 'r') { |csv| csv.first }
+
+      self.class.class_eval {attr_accessor *params.keys}
+        params.each {|key,value| send("#{key}=",value) if headers.include?(key.to_s)}
     end
 
     def save
@@ -15,7 +20,7 @@ module ActiverecordKinnarts
 
     def self.create_db_table_with_fields(*params)
       CSV.open("#{self.name}.csv", "wb") do |csv|
-        csv << params
+        csv << params.push('id')
       end
     end
   end
