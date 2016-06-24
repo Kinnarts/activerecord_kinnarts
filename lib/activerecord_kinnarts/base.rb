@@ -12,7 +12,14 @@ module ActiverecordKinnarts
     end
 
     def save
-      puts 'save'
+      headers = CSV.open("#{self.class.name}.csv", 'r') { |csv| csv.first }
+      @@id += 1
+      params = headers.reject{|header| header == 'id'}.map {|header| self.send(header)}
+      params << @@id
+
+      CSV.open("#{self.class.name}.csv", "a+") do |csv|
+        csv << params
+      end
     end
 
     def update
