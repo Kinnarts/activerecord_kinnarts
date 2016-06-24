@@ -12,4 +12,5 @@
 *.o
 *.a
 *.gem
+*.csv
 mkmf.log
